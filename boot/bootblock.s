@@ -9,6 +9,7 @@
 .globl _start
 _start:
 
+
 	cli
 	movw %cs, %ax
 	movw %ax, %ds
@@ -35,20 +36,19 @@ _start:
 	jmp $0x9000,$start
 
 start:
+
 	movw %cs, %ax
 	movw %ax, %ds
 	movw %ax, %ss
 	
-	hlt
-
 # Report a message to user
 	movw $msg_loading, %si
 	call kputs
 
-
 # Now read cylinder.
-	mov $1, %di
+	movw $1, %di
 	movw $0x290, %ax
+
 	xorw %bx, %bx
 
 loop:
@@ -60,7 +60,7 @@ loop:
 	shrw $1, %di
 	setcb %dh
 	movw %di, %cx
-	xchgb %ch, %cl
+	xchg %ch, %cl
 
 	popw %di
 
@@ -69,7 +69,6 @@ loop:
 	je quit
 
 	call kread_cylinder
-
 
 	pusha
 	pushw %ds
@@ -175,7 +174,6 @@ kputhex: #output hex function
 
 	movb %ah, %bl
 	andb $0x0f, %bl
-	shrb $4, %bl
 	movb hex_table(%bx), %al
 	call kputchar
 
@@ -193,6 +191,7 @@ kputchar:
 
 kputs:
 	pusha
+
 	kputs_loop:
 
 	lodsb
