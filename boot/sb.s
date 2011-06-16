@@ -72,6 +72,7 @@ _protected:
 	movw %ax, %ss
 
 	movl $kernel_binary, %esi
+    movl $0x200000, %edi
 
 	movl $0x4000, %ecx
 
