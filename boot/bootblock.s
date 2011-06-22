@@ -15,7 +15,7 @@ _start:
 	movw %ax, %ds
 	movw %ax, %es
 	movw %ax, %ss
-	movw $_start, %sp
+	movw $0x7c00, %sp
 
 	sti
 
