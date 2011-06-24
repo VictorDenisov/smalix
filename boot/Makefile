@@ -11,11 +11,11 @@ main: kernel bootblock.s sb.s
 
 kernel: ktty.c kernel.c startup.s ioports.c intslib.c handlers.c
 	as --32 -o startup.o startup.s
-	gcc -m32 -ffreestanding -c -o ktty.o ktty.c
-	gcc -m32 -ffreestanding -c -o kernel.o kernel.c
-	gcc -m32 -ffreestanding -c -o handlers.o handlers.c
-	gcc -m32 -ffreestanding -c -o intslib.o intslib.c
-	gcc -m32 -ffreestanding -c -o ioports.o ioports.c
+	gcc -m32 -fno-stack-protector -ffreestanding -c -o ktty.o ktty.c
+	gcc -m32 -fno-stack-protector -ffreestanding -c -o kernel.o kernel.c
+	gcc -m32 -fno-stack-protector -ffreestanding -c -o handlers.o handlers.c
+	gcc -m32 -fno-stack-protector -ffreestanding -c -o intslib.o intslib.c
+	gcc -m32 -fno-stack-protector -ffreestanding -c -o ioports.o ioports.c
 	ld -melf_i386 --oformat binary -Ttext=0x200000 -o kernel.img startup.o ktty.o intslib.o ioports.o handlers.o kernel.o
 
 clean:
