@@ -19,10 +19,13 @@ _start:
 	movw $msg_entering_pmode, %si
 	call kputs
 
+    # cursor switch off
 	movb $1, %ah
 	movb $0x20, %ch
 	int $0x10
 
+	cli
+    # Base interrupt vector to 0x20.
 	movb $0x11, %al
 	outb $0x20
 	movb $0x20, %al
@@ -32,14 +35,15 @@ _start:
 	movb $0x01, %al
 	outb $0x21
 
-	cli
 
 	lgdt gd_reg
 
+    # A20 switch on
 	inb $0x92
 	or $2, %al
 	outb $0x92
 
+    # set up PE bit of cr0
 	movl %cr0, %eax
 	orb $1, %al
 	movl %eax, %cr0

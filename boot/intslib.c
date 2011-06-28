@@ -27,14 +27,9 @@ void i_install(unsigned char vector, void (*func)(), unsigned char type)
     b[6]=( (unsigned int)func & 0x00FF0000) >> 16;
     b[7]=( (unsigned int)func & 0xFF000000) >> 24;
 
-
-
     for(i=0;i<8;i++){
         *(idt_table+vector*8+i)=b[i];
-        printf("byte %i - %x\n", i, b[i]);
     }
-
-
 }
 
 //Load IDTR
@@ -46,10 +41,6 @@ void i_setup()
     *table_limit = 256*8 - 1;
     *table_address = IDT_TABLE;
     
-    printf("\ntable limit %X\n", *table_limit);
-    printf("\ntable address %X\n", *table_address);
-    printf("\nidt %X\n", (unsigned int*)IDT_REG);
-
     asm("lidt 0(,%0,)"::"a"(IDT_REG));
     asm("sti");
 }

@@ -3,25 +3,120 @@
 #define IRQ_HANDLER(func) void func (void);\
  asm(#func ": pusha \n call _" #func " \n movb $0x20, %al \n outb $0x20 \n popa \n iret \n");\
   void _ ## func(void)
-
+  
+#define IRQ_ERROR_HANDLER(func) void func (void);\
+ asm(#func ": pusha \n call _" #func " \n movb $0x20, %al \n outb $0x20 \n popa \n inc %esp \n inc %esp \n iretl \n");\
+  void _ ## func(void)
 
 IRQ_HANDLER(irq_timer)
 {
-    //putchar('x');
 }
-//Здесь мы храним состояние шифта
-char shift = 0;
 
-//IRQ_HANDLER(irq_keyboard)
-void irq_keyboard(void)
+IRQ_HANDLER(irq_dumb) {
+    puts("e\n");
+    asm("hlt");
+}
+
+IRQ_HANDLER(irq_dumb0) {
+    puts("e0\n");
+    asm("hlt");
+}
+
+IRQ_HANDLER(irq_dumb1) {
+    puts("e1\n");
+    asm("hlt");
+}
+
+IRQ_HANDLER(irq_dumb2) {
+    puts("e2\n");
+    asm("hlt");
+}
+
+IRQ_HANDLER(irq_dumb3) {
+    puts("e3\n");
+    asm("hlt");
+}
+
+IRQ_HANDLER(irq_dumb4) {
+    puts("e4\n");
+    asm("hlt");
+}
+
+IRQ_HANDLER(irq_dumb5) {
+    puts("e5\n");
+    asm("hlt");
+}
+
+/*
+void irq_dumb6 (void);
+asm("irq_dumb6: call puthexi \n popl %eax \n call puthexw \n hlt \n movb $0x20, %al \n outb $0x20 \n hlt \n iretl \n");
+*/
+IRQ_HANDLER(irq_dumb6) {
+    puts("e6\n");
+    asm("hlt");
+}
+
+IRQ_HANDLER(irq_dumb7) {
+    puts("e7\n");
+    asm("hlt");
+}
+
+IRQ_ERROR_HANDLER(irq_dumb_error) {
+    puts("e\n");
+}
+
+IRQ_ERROR_HANDLER(irq_dumb_error8) {
+    puts("e8\n");
+    asm("hlt");
+}
+
+IRQ_ERROR_HANDLER(irq_dumb_error9) {
+    puts("e9\n");
+    asm("hlt");
+}
+
+IRQ_ERROR_HANDLER(irq_dumb_error10) {
+    puts("e10\n");
+    asm("hlt");
+}
+
+IRQ_ERROR_HANDLER(irq_dumb_error11) {
+    puts("e11\n");
+    asm("hlt");
+}
+
+IRQ_ERROR_HANDLER(irq_dumb_error12) {
+    puts("e12\n");
+    asm("hlt");
+}
+
+IRQ_ERROR_HANDLER(irq_dumb_error13) {
+    puts("e13\n");
+    asm("hlt");
+}
+
+IRQ_ERROR_HANDLER(irq_dumb_error14) {
+    puts("e14\n");
+    asm("hlt");
+}
+
+IRQ_HANDLER(irq_dumb16) {
+    puts("e16\n");
+    asm("hlt");
+}
+
+IRQ_ERROR_HANDLER(irq_dumb_error17) {
+    puts("e17\n");
+    asm("hlt");
+}
+
+IRQ_HANDLER(irq_keyboard)
 {
+    static unsigned char shift = 0;
     unsigned char scancode, ascii;
     unsigned char creg;
 
-    //putchar('x');
-
     //Прочитаем скан-код из порта 0x60
-    /*
     scancode = inportb(0x60);
 
     switch(scancode) {
@@ -68,20 +163,51 @@ void irq_keyboard(void)
     creg = inportb(0x61);
 
     //Установим в нем старший бит
-    creg |= 1;
+    creg |= 0x80;
 
     //И запишем обратно
     outportb(0x61, creg);
-    */
 }
 
-
-//Ну и наконец - функция, которая установит все обработчики прерываний и разрешит их обработку:
+//Setup handlers. Enable irq processing.
 
 void init_interrupts()
 {
+    puthexi(&irq_keyboard);
+   
+    int i;
+
+    i_install(0, &irq_dumb0, 0x8f);
+    i_install(1, &irq_dumb1, 0x8f);
+    i_install(2, &irq_dumb2, 0x8e);
+    i_install(3, &irq_dumb3, 0x8e);
+    i_install(4, &irq_dumb4, 0x8e);
+    i_install(5, &irq_dumb5, 0x8f);
+    i_install(6, &irq_dumb6, 0x8f);
+    i_install(7, &irq_dumb7, 0x8f);
+
+    i_install(8, &irq_dumb_error8, 0x8f);
+    i_install(9, &irq_dumb_error9, 0x8f);
+    i_install(10, &irq_dumb_error10, 0x8f);
+    i_install(11, &irq_dumb_error11, 0x8f);
+    i_install(12, &irq_dumb_error12, 0x8f);
+    i_install(13, &irq_dumb_error13, 0x8f);
+    i_install(14, &irq_dumb_error14, 0x8f);
+
+    i_install(16, &irq_dumb16, 0x8f);
+    i_install(17, &irq_dumb_error17, 0x8f);
+
+    for (i = 17; i < 32; ++i) {
+        i_install(i, &irq_dumb_error, 0x8f);
+    }
+
     i_install(0x20, &irq_timer, 0x8e);
     i_install(0x21, &irq_keyboard, 0x8e);
+
+    for (i = 0x22; i < 0x70; ++i) {
+        i_install(i, &irq_dumb, 0x8e);
+    }
+
     i_setup();
     i_enable();
 }

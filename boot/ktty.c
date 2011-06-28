@@ -114,6 +114,12 @@ void puthex(unsigned char byte)
     puthexd(rb);
 }
 
+void puthexw(unsigned short int word)
+{
+    puthex( (word & 0xFF00) >>8);
+    puthex( (word & 0x00FF));
+}
+
 void puthexi(unsigned int dword)
 {
     puthex( (dword & 0xFF000000) >>24);

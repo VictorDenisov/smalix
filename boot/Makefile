@@ -4,7 +4,7 @@ main: kernel bootblock.s sb.s
 	as -o sb.o sb.s
 	ld -Ttext=700 --oformat binary sb.o -o sb.img
 
-	dd if=/dev/zero of=boot.img count=64
+	dd if=/dev/zero of=boot.img count=768
 	dd if=bootblock.img of=boot.img conv=notrunc
 	dd if=sb.img of=boot.img seek=1 conv=notrunc
 	dd if=kernel.img of=boot.img obs=1 seek=730 conv=notrunc
