@@ -19,13 +19,13 @@ _start:
 	movw $msg_entering_pmode, %si
 	call kputs
 
-    # cursor switch off
+	# cursor switch off
 	movb $1, %ah
 	movb $0x20, %ch
 	int $0x10
 
 	cli
-    # Base interrupt vector to 0x20.
+	# Base interrupt vector to 0x20.
 	movb $0x11, %al
 	outb $0x20
 	movb $0x20, %al
@@ -38,12 +38,12 @@ _start:
 
 	lgdt gd_reg
 
-    # A20 switch on
+	# A20 switch on
 	inb $0x92
 	or $2, %al
 	outb $0x92
 
-    # set up PE bit of cr0
+	# set up PE bit of cr0
 	movl %cr0, %eax
 	orb $1, %al
 	movl %eax, %cr0
@@ -75,10 +75,12 @@ _protected:
 	movw %ax, %es
 	movw %ax, %ss
 
+	# Moving kernel to address 2M
 	movl $kernel_binary, %esi
-    movl $0x200000, %edi
+	movl $0x200000, %edi
 
-	movl $0x4000, %ecx
+	# We expect that size of kernel is less than 64K
+	movl $0x4000, %ecx 
 
 	rep movsl
 
@@ -87,8 +89,10 @@ _protected:
 gdt:
 .short 0, 0, 0, 0
 
+#Code segment DPL=0 base=0 limit=4Gb
 .byte 0xff, 0xff, 0x00, 0x00, 0x00, 0x9a, 0xcf, 0x00
 
+#Data segment DPL=0 base=0 limit=4Gb
 .byte 0xff, 0xff, 0x00, 0x00, 0x00, 0x92, 0xcf, 0x00
 
 gd_reg:
