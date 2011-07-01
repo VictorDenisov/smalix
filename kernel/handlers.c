@@ -153,7 +153,7 @@ IRQ_HANDLER(irq_keyboard)
                 //Если в результате преобразования нажата клавиша с каким-либо
                 //символом, то вывести его на экран
                 if(ascii != 0) {
-                    putchar(ascii);
+                    ungetc(ascii);
                 }
             }
             break;

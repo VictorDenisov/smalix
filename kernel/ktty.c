@@ -187,3 +187,73 @@ void printf(const char *fmt, ...)
 
     va_end(args);
 }
+
+struct {
+    int pointer;
+    char buff[0x100];
+} tty_buffer;
+
+//Синхронный getc (возвращает символ; если буфер пуст - 
+//ждет пока символ появится)
+char getc(void)
+{
+    char symbol;
+    int i;
+
+    while (tty_buffer.pointer == 0) {
+        asm("hlt");
+    }
+
+    symbol = tty_buffer.buff[0];
+
+    for (i = 0; i < tty_buffer.pointer; i++) {
+        tty_buffer.buff[i] = tty_buffer.buff[i-1];
+    }
+
+    tty_buffer.pointer--;
+
+
+    return symbol;
+}
+
+void ungetc(char c)
+{
+    tty_buffer.buff[tty_buffer.pointer] = c;
+    tty_buffer.pointer++;
+}
+
+void getsn(char* s, int num)
+{
+    char c = 0;
+    const char *start;
+
+    start = s;
+
+    while ( (c = getc()) != '\n') {
+
+        switch(c) {
+            case 8:
+
+                if( start < s) {
+                    s--;
+                    *s = 0;
+                    putchar(c);
+                }
+                break;
+
+            default:
+
+                if ( (s - start) <= num ) {
+
+                    *s = c;
+                    putchar(c);
+                    s++;
+                    *s = 0;
+                }
+                break;
+        }
+    }
+
+    putchar('\n');
+}
+
