@@ -47,10 +47,6 @@ IRQ_HANDLER(irq_dumb5) {
     asm("hlt");
 }
 
-/*
-void irq_dumb6 (void);
-asm("irq_dumb6: call puthexi \n popl %eax \n call puthexw \n hlt \n movb $0x20, %al \n outb $0x20 \n hlt \n iretl \n");
-*/
 IRQ_HANDLER(irq_dumb6) {
     puts("e6\n");
     asm("hlt");
@@ -150,8 +146,7 @@ IRQ_HANDLER(irq_keyboard)
                     ascii = scancodes[scancode];
                 }
 
-                //Если в результате преобразования нажата клавиша с каким-либо
-                //символом, то вывести его на экран
+                //If ascii character put it to the buffer.
                 if(ascii != 0) {
                     ungetc(ascii);
                 }
@@ -173,10 +168,6 @@ IRQ_HANDLER(irq_keyboard)
 
 void init_interrupts()
 {
-    puthexi(&irq_keyboard);
-   
-    int i;
-
     i_install(0, &irq_dumb0, 0x8f);
     i_install(1, &irq_dumb1, 0x8f);
     i_install(2, &irq_dumb2, 0x8e);
@@ -197,6 +188,7 @@ void init_interrupts()
     i_install(16, &irq_dumb16, 0x8f);
     i_install(17, &irq_dumb_error17, 0x8f);
 
+    int i;
     for (i = 17; i < 32; ++i) {
         i_install(i, &irq_dumb_error, 0x8f);
     }

@@ -1,11 +1,11 @@
 #include <stdarg.h>
 
-#define VIDEO_WIDTH 80    //ширина экрана
-#define VIDEO_HEIGHT 25   //высота экрана
-#define VIDEO_RAM 0xb8000 //адрес видеопамяти
+#define VIDEO_WIDTH 80    //Screen width
+#define VIDEO_HEIGHT 25   //Screen height
+#define VIDEO_RAM 0xb8000 //Video buffer address - 46K
 
-int tty_cursor;    //положение курсора
-int tty_attribute; //текущий аттрибут символа
+int tty_cursor;    //Cursor position
+int tty_attribute; //Cursor current attribute
 
 
 //Инициализация tty
