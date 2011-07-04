@@ -3,6 +3,8 @@ void kernel_main()
     init_tty();
     clear();
     init_interrupts();
+    create_page_table();
+    enable_paging();
 
     puts("We use C, isn't this great?\n");
     printf("Decimal %i\n"
