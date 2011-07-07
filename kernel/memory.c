@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 void create_page_table()
 {
     printf("Creating page table\n");
@@ -8,8 +10,13 @@ void create_page_table()
     for (i = 0; i < 1024; ++i) {
         page_table[i] = 0x00000007 + i * 0x1000;
     }
-    asm("movl $0x00180000, %eax");
-    asm("movl %eax, %cr3");
+
+    set_page_directory(0x00180000);
+}
+
+void set_page_directory(uint32_t* page_directory)
+{
+    asm("movl %%eax, %%cr3" ::"a"(page_directory));
 }
 
 void enable_paging()
