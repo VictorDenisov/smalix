@@ -1,5 +1,5 @@
-kernel.img: ktty.o kernel.o startup.o ioports.o intslib.o handlers.o memory.o
-	ld -melf_i386 --oformat binary -Ttext=0x200000 -o kernel.img startup.o ktty.o intslib.o ioports.o handlers.o memory.o kernel.o
+kernel.img: ktty.o kernel.o startup.o ioports.o intslib.o handlers.o memory.o task.o
+	ld -melf_i386 --oformat binary -Ttext=0x200000 -o kernel.img startup.o ktty.o intslib.o ioports.o handlers.o memory.o kernel.o task.o
 
 startup.o: startup.s
 	as --32 -o startup.o startup.s
@@ -22,6 +22,8 @@ ioports.o: ioports.c
 memory.o: memory.c
 	gcc -m32 -fno-stack-protector -ffreestanding -c -o memory.o memory.c
 
+task.o: task.c
+	gcc -m32 -fno-stack-protector -ffreestanding -c -o task.o task.c
 
 clean:
 	rm *.o

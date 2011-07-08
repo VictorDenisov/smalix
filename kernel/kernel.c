@@ -3,7 +3,7 @@ void kernel_main()
     init_tty();
     clear();
     init_interrupts();
-    create_page_table();
+    create_page_directory();
     enable_paging();
 
     puts("We use C, isn't this great?\n");
