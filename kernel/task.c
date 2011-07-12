@@ -22,11 +22,34 @@ struct task_descriptor
 
 struct task_descriptor task_list[0x100];
 
+uint32_t max_task_id = 0;
+
 static void store_current_task(struct task_descriptor* d);
+
+static void create_new_task();
 
 void start_init()
 {
     store_current_task(&(task_list[0]));
+    create_new_task();
+}
+
+static void create_new_task()
+{
+    //TODO this function should be finished
+    task_list[max_task_id].cr3 = 0;
+    task_list[max_task_id].eax = 0;
+    task_list[max_task_id].ebx = 0;
+    task_list[max_task_id].ecx = 0;
+    task_list[max_task_id].edx = 0;
+
+    task_list[max_task_id].esp = 0;
+    task_list[max_task_id].ebp = 0;
+
+    task_list[max_task_id].esi = 0;
+    task_list[max_task_id].edi = 0;
+
+    ++max_task_id;
 }
 
 static void store_current_task(struct task_descriptor* d)

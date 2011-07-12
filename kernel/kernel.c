@@ -1,3 +1,5 @@
+void getsn_test();
+
 void kernel_main()
 {
     init_tty();
