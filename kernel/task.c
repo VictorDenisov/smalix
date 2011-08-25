@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-uint32_t current_task;
+uint32_t current_task_id;
 
 struct task_descriptor
 {
@@ -24,17 +24,55 @@ struct task_descriptor task_list[0x100];
 
 uint32_t max_task_id = 0;
 
-static void store_current_task(struct task_descriptor* d);
+#define restore_task(d) \
+    asm("nop":: "a"((d) -> eax)); \
+    asm("nop":: "b"((d) -> ebx)); \
+    asm("nop":: "c"((d) -> ecx)); \
+    asm("nop":: "d"((d) -> edx)); \
+    asm("mov %%eax, %%esp":: "a"(d -> esp)); \
+    asm("mov %%eax, %%ebp":: "a"(d -> ebp)); \
+    asm("mov %%eax, %%esi":: "a"(d -> esi)); \
+    asm("mov %%eax, %%edi":: "a"(d -> edi)); \
+    asm("mov %%eax, %%cr3":: "a"(d -> cr3)); \
+    asm("push %%eax \n popfl":: "a"(d -> eflags)); \
+    asm("jmp %0":: "a"(d -> eip));
 
-static void create_new_task();
+#define store_current_task(d) \
+    asm("nop": "=a"((d) -> eax)); \
+    asm("nop": "=b"((d) -> ebx)); \
+    asm("nop": "=c"((d) -> ecx)); \
+    asm("nop": "=d"((d) -> edx)); \
+    asm("mov %%esp, %%eax": "=a"((d) -> esp)); \
+    asm("mov %%ebp, %%eax": "=a"((d) -> ebp)); \
+    asm("mov %%esi, %%eax": "=a"((d) -> esi)); \
+    asm("mov %%edi, %%eax": "=a"((d) -> edi)); \
+    asm("mov %%cr3, %%eax": "=a"((d) -> cr3)); \
+    asm("pop %%eax": "=a"((d) -> eip)); \
+    asm("push %eax"); \
+    asm("pushfl \n pop %%eax": "=a"((d) -> eflags));
+
+static uint32_t create_new_task();
+
+void init();
+
+void schedule(uint32_t task_id);
 
 void start_init()
 {
-    store_current_task(&(task_list[0]));
-    create_new_task();
+    current_task_id = create_new_task();
+
+    store_current_task((&task_list[current_task_id]));
+    task_list[current_task_id].eip = (uint32_t)init;
+    printf("%X \n", init);
+    restore_task((&(task_list[current_task_id])));
 }
 
-static void create_new_task()
+void reschedule()
+{
+    store_current_task(&(task_list[current_task_id]));
+}
+
+static uint32_t create_new_task()
 {
     //TODO this function should be finished
     task_list[max_task_id].cr3 = 0;
@@ -49,23 +87,20 @@ static void create_new_task()
     task_list[max_task_id].esi = 0;
     task_list[max_task_id].edi = 0;
 
+    uint32_t result = max_task_id;
     ++max_task_id;
+    return result;
 }
 
-static void store_current_task(struct task_descriptor* d)
+int fork() {
+    int new_task_id = create_new_task();
+    //store_current_task(&task_list[new_task_id]);
+}
+
+void init()
 {
-    asm("nop": "=a"(d -> eax));
-    asm("nop": "=b"(d -> ebx));
-    asm("nop": "=c"(d -> ecx));
-    asm("nop": "=d"(d -> edx));
-
-    asm("mov %%esp, %%eax": "=a"(d -> esp));
-    asm("mov %%ebp, %%eax": "=a"(d -> ebp));
-
-    asm("mov %%esi, %%eax": "=a"(d -> esi));
-    asm("mov %%edi, %%eax": "=a"(d -> edi));
-
-    asm("mov %%cr3, %%eax": "=a"(d -> cr3));
-    asm("pop %%eax": "=a"(d -> eip));
-    asm("pushfl \n pop %%eax": "=a"(d -> eflags));
+    for (;;) {
+        printf("init");
+    }
 }
+

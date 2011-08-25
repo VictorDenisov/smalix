@@ -17,9 +17,7 @@ void kernel_main()
 
     getsn_test();
 
-    for (;;) {
-        //putchar('h');
-    }
+    start_init();
 }
 
 void getsn_test()
