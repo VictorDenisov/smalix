@@ -12,96 +12,115 @@ IRQ_HANDLER(irq_timer)
 {
 }
 
-IRQ_HANDLER(irq_dumb) {
+IRQ_HANDLER(irq_dumb)
+{
     puts("e\n");
     asm("hlt");
 }
 
-IRQ_HANDLER(irq_dumb0) {
+IRQ_HANDLER(irq_dumb0)
+{
     puts("e0\n");
     asm("hlt");
 }
 
-IRQ_HANDLER(irq_dumb1) {
+IRQ_HANDLER(irq_dumb1)
+{
     puts("e1\n");
     asm("hlt");
 }
 
-IRQ_HANDLER(irq_dumb2) {
+IRQ_HANDLER(irq_dumb2)
+{
     puts("e2\n");
     asm("hlt");
 }
 
-IRQ_HANDLER(irq_dumb3) {
+IRQ_HANDLER(irq_dumb3)
+{
     puts("e3\n");
     asm("hlt");
 }
 
-IRQ_HANDLER(irq_dumb4) {
+IRQ_HANDLER(irq_dumb4)
+{
     puts("e4\n");
     asm("hlt");
 }
 
-IRQ_HANDLER(irq_dumb5) {
+IRQ_HANDLER(irq_dumb5)
+{
     puts("e5\n");
     asm("hlt");
 }
 
-IRQ_HANDLER(irq_dumb6) {
+IRQ_HANDLER(irq_dumb6)
+{
     puts("e6\n");
     asm("hlt");
 }
 
-IRQ_HANDLER(irq_dumb7) {
+IRQ_HANDLER(irq_dumb7)
+{
     puts("e7\n");
     asm("hlt");
 }
 
-IRQ_ERROR_HANDLER(irq_dumb_error) {
+IRQ_ERROR_HANDLER(irq_dumb_error)
+{
     puts("e\n");
 }
 
-IRQ_ERROR_HANDLER(irq_dumb_error8) {
+IRQ_ERROR_HANDLER(irq_dumb_error8)
+{
     puts("e8\n");
     asm("hlt");
 }
 
-IRQ_ERROR_HANDLER(irq_dumb_error9) {
+IRQ_ERROR_HANDLER(irq_dumb_error9)
+{
     puts("e9\n");
     asm("hlt");
 }
 
-IRQ_ERROR_HANDLER(irq_dumb_error10) {
+IRQ_ERROR_HANDLER(irq_dumb_error10)
+{
     puts("e10\n");
     asm("hlt");
 }
 
-IRQ_ERROR_HANDLER(irq_dumb_error11) {
+IRQ_ERROR_HANDLER(irq_dumb_error11)
+{
     puts("e11\n");
     asm("hlt");
 }
 
-IRQ_ERROR_HANDLER(irq_dumb_error12) {
+IRQ_ERROR_HANDLER(irq_dumb_error12)
+{
     puts("e12\n");
     asm("hlt");
 }
 
-IRQ_ERROR_HANDLER(irq_dumb_error13) {
+IRQ_ERROR_HANDLER(irq_dumb_error13)
+{
     puts("e13\n");
     asm("hlt");
 }
 
-IRQ_ERROR_HANDLER(irq_dumb_error14) {
+IRQ_ERROR_HANDLER(irq_dumb_error14)
+{
     puts("e14\n");
     asm("hlt");
 }
 
-IRQ_HANDLER(irq_dumb16) {
+IRQ_HANDLER(irq_dumb16)
+{
     puts("e16\n");
     asm("hlt");
 }
 
-IRQ_ERROR_HANDLER(irq_dumb_error17) {
+IRQ_ERROR_HANDLER(irq_dumb_error17)
+{
     puts("e17\n");
     asm("hlt");
 }

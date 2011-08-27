@@ -87,12 +87,16 @@ static uint32_t create_new_task()
     task_list[max_task_id].esi = 0;
     task_list[max_task_id].edi = 0;
 
+    task_list[max_task_id].eip = 0;
+    task_list[max_task_id].eflags = 0;
+
     uint32_t result = max_task_id;
     ++max_task_id;
     return result;
 }
 
-int fork() {
+int fork()
+{
     int new_task_id = create_new_task();
     //store_current_task(&task_list[new_task_id]);
 }
